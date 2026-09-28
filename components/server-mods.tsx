@@ -55,7 +55,7 @@ export default function ServerMods({ serverId }: ServerModsProps) {
           />
         }
       >
-        [MODS{mods ? ` ${mods.length}` : ""}]
+        [{mods === undefined ? "LOADING MODS..." : `MODS${mods ? ` ${mods.length}` : ""}`}]
       </DialogTrigger>
       <DialogContent className="flex max-h-[85dvh] flex-col gap-4 overflow-hidden sm:max-w-lg">
         <DialogHeader>

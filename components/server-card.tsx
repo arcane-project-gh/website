@@ -1,10 +1,10 @@
-import { ArrowUpRight } from "lucide-react";
-import { Popover } from "@base-ui/react/popover";
-import { Button } from "./ui/button";
-import ServerStatus from "./server-status";
-import ServerMods from "./server-mods";
 import { Server } from "@/lib/servers";
 import { cn } from "@/lib/utils";
+import { Popover } from "@base-ui/react/popover";
+import { ArrowUpRight } from "lucide-react";
+import ServerMods from "./server-mods";
+import ServerStatus from "./server-status";
+import { Button } from "./ui/button";
 
 type ServerCardProps = Pick<Server, "id" | "description" | "tags"> & {
     className?: string;
@@ -22,9 +22,13 @@ export default function ServerCard({ id, description, tags, className }: ServerC
         </div>
       </div>
       <div className="min-h-30 flex flex-col gap-3 p-4">
-        {description && (
-          <p className="text-muted-foreground text-xs leading-relaxed">{description}</p>
-        )}
+        <div className="flex flex-col gap-1">
+          {description.map((paragraph) => (
+            <p key={paragraph} className="text-muted-foreground text-xs leading-relaxed">
+              {paragraph}
+            </p>
+          ))}
+        </div>
         <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
           <ServerMods serverId={id} />
           {tags?.map((tag) => (

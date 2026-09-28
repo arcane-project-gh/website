@@ -51,7 +51,7 @@ export default function ServerStatus({ serverId }: ServerStatusProps) {
     : status === null
       ? "Offline"
       : "...";
-  const serverName = status?.name ?? (status === null ? "Server offline" : "Querying server...");
+  const serverName = status?.name ?? (status === null ? "Server offline" : `Querying ${serverId}...`);
 
   return (
     <div className="flex h-full min-w-0 flex-1 items-center justify-between gap-4 pr-2 pl-4">
@@ -80,7 +80,7 @@ export default function ServerStatus({ serverId }: ServerStatusProps) {
         <ChartNoAxesColumnIncreasingIcon
           className={`size-3 ${isOnline ? "text-emerald-500" : "text-muted-foreground"}`}
         />
-        <p className="font-mono text-xs">{playerCount}</p>
+        <p className="font-mono text-xs">{status == null ? "../.." : playerCount }</p>
       </div>
     </div>
   );
