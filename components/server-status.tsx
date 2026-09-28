@@ -1,8 +1,9 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { ChartNoAxesColumnIncreasingIcon } from "lucide-react";
+import { ArrowUpRight, ChartNoAxesColumnIncreasingIcon } from "lucide-react";
 import { Popover } from "@base-ui/react/popover";
+import { Button } from "./ui/button";
 
 type ServerStatusProps = {
   serverId: string;
@@ -51,11 +52,11 @@ export default function ServerStatus({ serverId }: ServerStatusProps) {
     : status === null
       ? "Offline"
       : "...";
-  const serverName = status?.name ?? (status === null ? "Server offline" : `Querying ${serverId}...`);
+  const serverName = status?.name ?? (status === null ? `${serverId} is currently offline` : `Querying ${serverId}...`);
 
   return (
-    <div className="flex h-full min-w-0 flex-1 items-center justify-between gap-4 pr-2 pl-4">
-      <div className="min-w-0 flex-1">
+    <div className="flex h-full min-w-0 flex-1 items-center">
+      <div className="min-w-0 flex-1 px-4">
         <Popover.Root>
           <Popover.Trigger
             className="block max-w-full cursor-pointer truncate text-left font-mono text-xs"
@@ -73,15 +74,18 @@ export default function ServerStatus({ serverId }: ServerStatusProps) {
         </Popover.Root>
       </div>
       <div
-        className="flex shrink-0 items-center gap-1 border-l h-full px-2"
+        className="flex h-full shrink-0 items-center gap-1 border-l px-2"
         aria-label={isOnline ? `${playerCount} players online` : playerCount}
         aria-live="polite"
       >
         <ChartNoAxesColumnIncreasingIcon
           className={`size-3 ${isOnline ? "text-emerald-500" : "text-muted-foreground"}`}
         />
-        <p className="font-mono text-xs">{status == null ? "../.." : playerCount }</p>
+        <p className="font-mono text-xs">{status == null ? "../.." : playerCount}</p>
       </div>
+      <Button className="h-full" disabled={!isOnline}>
+        Connect <ArrowUpRight />
+      </Button>
     </div>
   );
 }

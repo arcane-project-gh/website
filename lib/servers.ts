@@ -12,7 +12,7 @@ export type Server = {
 export const SERVERS: Server[] = [
   {
     id: "chernarus-1",
-    ip: "5.252.101.139",
+    ip: "5.252.201.139",
     port: 2302,
     queryPort: 2303,
     description: [

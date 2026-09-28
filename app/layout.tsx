@@ -1,9 +1,10 @@
-import type { Metadata } from "next";
-import { Geist, Geist_Mono, Instrument_Sans } from "next/font/google";
-import "./globals.css";
-import { cn } from "@/lib/utils";
-import { Navbar } from "@/components/navbar";
 import { Footer } from "@/components/footer";
+import { Navbar } from "@/components/navbar";
+import { cn } from "@/lib/utils";
+import type { Metadata } from "next";
+import { Geist, Geist_Mono } from "next/font/google";
+import "./globals.css";
+import { Analytics } from "@vercel/analytics/next"
 
 const geist = Geist({subsets:['latin'],variable:'--font-sans'});
 
@@ -29,6 +30,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       className={cn("h-full", "dark", "antialiased", geistSans.variable, geistMono.variable, "font-sans", geist.variable)}
     >
       <body className="min-h-full flex flex-col max-w-6xl mx-auto">
+        <Analytics />
         <Navbar />
         {children}
         <Footer />

@@ -1,10 +1,8 @@
 import { Server } from "@/lib/servers";
 import { cn } from "@/lib/utils";
 import { Popover } from "@base-ui/react/popover";
-import { ArrowUpRight } from "lucide-react";
 import ServerMods from "./server-mods";
 import ServerStatus from "./server-status";
-import { Button } from "./ui/button";
 
 type ServerCardProps = Pick<Server, "id" | "description" | "tags"> & {
     className?: string;
@@ -16,9 +14,6 @@ export default function ServerCard({ id, description, tags, className }: ServerC
       <div className="h-14 w-full border-b">
         <div className="h-full w-full flex items-center">
           <ServerStatus serverId={id} />
-          <Button className="h-full">
-            Connect <ArrowUpRight />
-          </Button>
         </div>
       </div>
       <div className="min-h-30 flex flex-col gap-3 p-4">
