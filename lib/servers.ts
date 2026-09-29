@@ -19,7 +19,8 @@ export const SERVERS: Server[] = [
     id: "chernarus-1",
     map: "Chernarus",
     address: {
-      ip: "5.252.101.139",
+    //   ip: "5.252.101.139",
+      ip: "localhost",
       ports: {
         query: 2303,
         game: 2302,
