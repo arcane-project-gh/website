@@ -1,5 +1,6 @@
-import { Button } from "@/components/ui/button";
 import { ArrowUpRight } from "lucide-react";
+import { buttonVariants } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 import DitherShader from "./ui/dither-shader";
 
 export default function DonationSection() {
@@ -25,15 +26,14 @@ export default function DonationSection() {
             servers running for everyone.
           </p>
         </div>
-        <Button
-          variant="default"
-          className="relative z-10"
-          render={
-            <a href="https://donate.stripe.com/4gM3cu4QW7Jj7Cg1NL1Fe00" target="_blank" rel="noreferrer">
-              Donate <ArrowUpRight />
-            </a>
-          }
-        />
+        <a
+          href="https://donate.stripe.com/4gM3cu4QW7Jj7Cg1NL1Fe00"
+          target="_blank"
+          rel="noreferrer"
+          className={cn(buttonVariants(), "relative z-10 cursor-pointer")}
+        >
+          Donate <ArrowUpRight />
+        </a>
       </div>
     </section>
   );

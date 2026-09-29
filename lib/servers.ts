@@ -2,9 +2,14 @@ import { TAG_1PP, TAG_ADVENTURE, type Tag } from "@/lib/tags";
 
 export type Server = {
   id: string;
-  ip: string;
-  port: number;
-  queryPort: number;
+  map: string;
+  address: {
+    ip: string;
+    ports: {
+      query: number;
+      game: number;
+    };
+  };
   description: string[];
   tags: Tag[];
 };
@@ -12,13 +17,17 @@ export type Server = {
 export const SERVERS: Server[] = [
   {
     id: "chernarus-1",
-    ip: "5.252.201.139",
-    port: 2302,
-    queryPort: 2303,
+    map: "Chernarus",
+    address: {
+      ip: "5.252.101.139",
+      ports: {
+        query: 2303,
+        game: 2302,
+      },
+    },
     description: [
-      "Chernarus is overrun and the remaining survivors are left to fend for themselves.",
-      "Explore the forests and abandoned towns, decide who to trust, and make your own way through the ruins.",
+      "Chernarus is overrun and the remaining survivors are left to fend for themselves. Explore the forests and abandoned towns, decide who to trust, and make your own way through the ruins.",
     ],
     tags: [TAG_ADVENTURE, TAG_1PP],
-  }
+  },
 ];

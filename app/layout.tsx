@@ -4,12 +4,10 @@ import { cn } from "@/lib/utils";
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import { Analytics } from "@vercel/analytics/next"
+import { Analytics } from "@vercel/analytics/next";
 
-const geist = Geist({subsets:['latin'],variable:'--font-sans'});
-
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const geist = Geist({
+  variable: "--font-sans",
   subsets: ["latin"],
 });
 
@@ -27,7 +25,11 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang="en"
-      className={cn("h-full", "dark", "antialiased", geistSans.variable, geistMono.variable, "font-sans", geist.variable)}
+      className={cn(
+        "h-full dark antialiased font-sans",
+        geist.variable,
+        geistMono.variable,
+      )}
     >
       <body className="min-h-full flex flex-col max-w-6xl mx-auto">
         <Analytics />

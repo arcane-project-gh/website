@@ -2,7 +2,7 @@ import DonationSection from "@/components/donation-section";
 import ServerCard from "@/components/server-card";
 import DitherShader from "@/components/ui/dither-shader";
 import { SERVERS } from "@/lib/servers";
-import { cn } from "@/lib/utils";
+import { cn } from "cn";
 
 export default function Home() {
   return (
@@ -28,9 +28,9 @@ export default function Home() {
           </p>
         </div>
       </div>
-      <div className="bg-background grid grid-cols-1 md:grid-cols-1 border-t items-stretch border-x" id="servers">
+      <div className="bg-background grid grid-cols-1 md:grid-cols-2 border-t items-stretch border-x" id="servers">
         {SERVERS.map((server) => (
-          <ServerCard key={server.id} {...server}  />
+          <ServerCard key={server.id} {...server} className={cn("border-r")} />
         ))}
       </div>
       <DonationSection />

@@ -1,58 +1,45 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import { ArrowUpRight, ChartNoAxesColumnIncreasingIcon } from "lucide-react";
 import { Popover } from "@base-ui/react/popover";
+import type { ServerStatusResponse } from "@/lib/server-api";
 import { Button } from "./ui/button";
+import { Skeleton } from "./ui/skeleton";
 
 type ServerStatusProps = {
   serverId: string;
+  connectionAddress: string;
+  status?: ServerStatusResponse;
+  isLoading: boolean;
+  hasError: boolean;
 };
 
-type ServerStatusResponse = {
-  online: boolean;
-  name?: string;
-  players?: number;
-  maxPlayers?: number;
-};
+export default function ServerStatus({
+  serverId,
+  connectionAddress,
+  status,
+  isLoading,
+  hasError,
+}: ServerStatusProps) {
+  if (isLoading) {
+    return (
+      <div className="flex h-full min-w-0 flex-1 items-center">
+        <div className="min-w-0 flex-1 px-4">
+          <Skeleton className="h-3 w-2/3" />
+        </div>
+        <div className="flex h-full shrink-0 items-center border-l px-2">
+          <Skeleton className="h-3 w-8" />
+        </div>
+        <Skeleton className="h-full w-24 shrink-0" />
+      </div>
+    );
+  }
 
-export default function ServerStatus({ serverId }: ServerStatusProps) {
-  const [status, setStatus] = useState<ServerStatusResponse | null>();
-
-  useEffect(() => {
-    let active = true;
-    let timer: ReturnType<typeof setTimeout>;
-
-    const updateStatus = async () => {
-      try {
-        const response = await fetch(`/api/servers/${serverId}`, {
-          cache: "no-store",
-        });
-        if (!response.ok) throw new Error("Server query failed");
-
-        const nextStatus = (await response.json()) as ServerStatusResponse;
-        if (active) setStatus(nextStatus.online ? nextStatus : null);
-      } catch {
-        if (active) setStatus(null);
-      } finally {
-        if (active) timer = setTimeout(updateStatus, 30_000);
-      }
-    };
-
-    void updateStatus();
-    return () => {
-      active = false;
-      clearTimeout(timer);
-    };
-  }, [serverId]);
-
-  const isOnline = status?.online === true;
+  const isOnline = status?.online === true && !hasError;
   const playerCount = isOnline
     ? `${status.players ?? 0}/${status.maxPlayers ?? 0}`
-    : status === null
-      ? "Offline"
-      : "...";
-  const serverName = status?.name ?? (status === null ? `${serverId} is currently offline` : `Querying ${serverId}...`);
+    : "Offline";
+  const serverName = isOnline ? status.name ?? serverId : serverId;
 
   return (
     <div className="flex h-full min-w-0 flex-1 items-center">
@@ -81,9 +68,13 @@ export default function ServerStatus({ serverId }: ServerStatusProps) {
         <ChartNoAxesColumnIncreasingIcon
           className={`size-3 ${isOnline ? "text-emerald-500" : "text-muted-foreground"}`}
         />
-        <p className="font-mono text-xs">{status == null ? "../.." : playerCount}</p>
+        <p className="font-mono text-xs">{playerCount}</p>
       </div>
-      <Button className="h-full" disabled={!isOnline}>
+      <Button
+        className="h-full"
+        disabled={!isOnline}
+        onClick={() => window.location.assign(`steam://connect/${connectionAddress}`)}
+      >
         Connect <ArrowUpRight />
       </Button>
     </div>

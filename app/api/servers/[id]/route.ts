@@ -1,5 +1,9 @@
-import { createValveProtocol } from "@srvquery/protocol-valve";
-import { SERVERS } from "@/lib/servers";
+import type { ServerStatusResponse } from "@/lib/server-api";
+import {
+  createServerProtocol,
+  getServerById,
+  SERVER_INFO_QUERY_TIMEOUT_MS,
+} from "@/lib/server-query";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -9,37 +13,30 @@ export async function GET(
   { params }: { params: Promise<{ id: string }> },
 ) {
   const { id } = await params;
-  const server = SERVERS.find((entry) => entry.id === id);
+  const server = getServerById(id);
 
   if (!server) {
     return Response.json({ error: "Server not found" }, { status: 404 });
   }
 
   try {
-    const protocol = createValveProtocol({
-      host: server.ip,
-      port: server.queryPort,
-      timeout: 1500,
-      retry: { retries: 1 },
-    });
+    const protocol = createServerProtocol(server, SERVER_INFO_QUERY_TIMEOUT_MS);
     const info = await protocol.query({ opcode: "INFO" });
 
-    return Response.json(
-      {
-        online: true,
-        name: info.name,
-        players: info.players,
-        maxPlayers: info.maxPlayers,
-      },
-      { headers: { "Cache-Control": "no-store" } },
-    );
+    const result: ServerStatusResponse = {
+      online: true,
+      name: info.name,
+      players: info.players,
+      maxPlayers: info.maxPlayers,
+    };
+    return Response.json(result, {
+      headers: { "Cache-Control": "no-store" },
+    });
   } catch {
-    return Response.json(
-      { online: false },
-      {
-        status: 503,
-        headers: { "Cache-Control": "no-store" },
-      },
-    );
+    const result: ServerStatusResponse = { online: false };
+    return Response.json(result, {
+      status: 503,
+      headers: { "Cache-Control": "no-store" },
+    });
   }
 }

@@ -1,8 +1,14 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import { ArrowUpRight } from "lucide-react";
+import useSWR from "swr";
 import { Button } from "@/components/ui/button";
+import {
+  fetchJson,
+  serverModsUrl,
+  type ServerModsResponse,
+} from "@/lib/server-api";
+import { Skeleton } from "./ui/skeleton";
 import {
   Dialog,
   DialogContent,
@@ -12,37 +18,30 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 
-type Mod = {
-  name: string;
-  id: string;
-};
-
 type ServerModsProps = {
   serverId: string;
 };
 
 export default function ServerMods({ serverId }: ServerModsProps) {
-  const [mods, setMods] = useState<Mod[] | null | undefined>();
+  const {
+    data: modsResponse,
+    error: modsError,
+    isLoading: areModsLoading,
+  } = useSWR<ServerModsResponse>(serverModsUrl(serverId), fetchJson<ServerModsResponse>);
+  const mods = modsResponse?.mods;
+  const modsLoaded = mods !== undefined && !modsError;
 
-  useEffect(() => {
-    let active = true;
+  if (areModsLoading) {
+    return <Skeleton className="h-5 w-20" />;
+  }
 
-    fetch(`/api/servers/${serverId}/mods`, { cache: "no-store" })
-      .then((response) => {
-        if (!response.ok) throw new Error("Mods query failed");
-        return response.json() as Promise<{ mods: Mod[] }>;
-      })
-      .then((data) => {
-        if (active) setMods(data.mods);
-      })
-      .catch(() => {
-        if (active) setMods(null);
-      });
-
-    return () => {
-      active = false;
-    };
-  }, [serverId]);
+  if (!modsLoaded) {
+    return (
+      <span className="font-mono text-[10px] text-muted-foreground">
+        [MODS UNAVAILABLE]
+      </span>
+    );
+  }
 
   return (
     <Dialog>
@@ -55,21 +54,17 @@ export default function ServerMods({ serverId }: ServerModsProps) {
           />
         }
       >
-        [{mods === undefined ? "LOADING MODS..." : `MODS${mods ? ` ${mods.length}` : ""}`}]
+        [MODS {mods.length}]
       </DialogTrigger>
       <DialogContent className="flex max-h-[85dvh] flex-col gap-4 overflow-hidden sm:max-w-lg">
         <DialogHeader>
           <DialogTitle>Server mods</DialogTitle>
           <DialogDescription>
-            {mods ? `${mods.length} mods installed on this server.` : "Mods installed on this server."}
+            {`${mods.length} mods installed on this server.`}
           </DialogDescription>
         </DialogHeader>
         <div className="min-h-0 overflow-y-auto">
-          {mods === undefined ? (
-            <p className="text-muted-foreground">Loading mods...</p>
-          ) : mods === null ? (
-            <p className="text-muted-foreground">Mods unavailable</p>
-          ) : mods.length === 0 ? (
+          {mods.length === 0 ? (
             <p className="text-muted-foreground">No mods listed</p>
           ) : (
             <ul className="grid divide-y">

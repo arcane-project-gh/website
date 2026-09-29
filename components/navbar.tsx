@@ -3,8 +3,9 @@
 import Link from "next/link";
 import { useState } from "react";
 import { Menu } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import { Logo } from "@/components/logo";
+import { cn } from "@/lib/utils";
 import {
   Sheet,
   SheetContent,
@@ -23,25 +24,29 @@ export function Navbar() {
     <header className="border-x">
       <nav className="flex h-14 items-stretch justify-between">
         <div className="flex items-stretch h-full">
-          <Button
-            variant="ghost"
-            className="h-full w-auto justify-start px-5 font-medium"
-            render={<Link href="/" />}
+          <Link
+            href="/"
+            className={cn(
+              buttonVariants({ variant: "ghost" }),
+              "h-full w-auto justify-start px-5 font-medium cursor-pointer",
+            )}
           >
             <Logo className="size-6 text-white" />
-          </Button>
+          </Link>
 
           {/* Desktop links */}
           <div className="hidden md:flex items-stretch h-full">
             {links.map((link) => (
-              <Button
+              <Link
                 key={link.href}
-                variant="link"
-                className="h-full w-auto justify-start px-5 text-xs text-foreground/80 hover:text-foreground"
-                render={<Link href={link.href} />}
+                href={link.href}
+                className={cn(
+                  buttonVariants({ variant: "link" }),
+                  "h-full w-auto justify-start px-5 text-xs text-foreground/80 hover:text-foreground cursor-pointer",
+                )}
               >
                 {link.label}
-              </Button>
+              </Link>
             ))}
           </div>
         </div>
