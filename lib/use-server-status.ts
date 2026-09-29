@@ -11,6 +11,13 @@ export function useServerStatus(serverId: string) {
   return useSWR<ServerStatusResponse>(
     serverStatusUrl(serverId),
     fetchJson<ServerStatusResponse>,
-    { refreshInterval: 30_000 },
+    {
+      refreshInterval: 0,
+      revalidateOnMount: true,
+      revalidateIfStale: false,
+      revalidateOnFocus: false,
+      revalidateOnReconnect: false,
+      shouldRetryOnError: false,
+    },
   );
 }

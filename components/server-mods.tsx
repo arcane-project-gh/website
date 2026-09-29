@@ -27,7 +27,17 @@ export default function ServerMods({ serverId }: ServerModsProps) {
     data: modsResponse,
     error: modsError,
     isLoading: areModsLoading,
-  } = useSWR<ServerModsResponse>(serverModsUrl(serverId), fetchJson<ServerModsResponse>);
+  } = useSWR<ServerModsResponse>(
+    serverModsUrl(serverId),
+    fetchJson<ServerModsResponse>,
+    {
+      revalidateOnMount: true,
+      revalidateIfStale: false,
+      revalidateOnFocus: false,
+      revalidateOnReconnect: false,
+      shouldRetryOnError: false,
+    },
+  );
   const mods = modsResponse?.mods;
   const modsLoaded = mods !== undefined && !modsError;
 
